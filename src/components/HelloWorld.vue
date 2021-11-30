@@ -14,24 +14,10 @@
         <H1 s> {{ slotProps.number }}</H1>
       </test2>
     </div>
-    <form style="background-color: brown"  v-on:submit.prevent="submit">
-      <div class="col-12 form-group">
-        <div>
-        <label> Name</label>
-        <input type="text" v-model="name">
-        </div>
-        <div>
-        <label>email</label>
-        <input type="email" v-model="email">
-        </div>
-        <div>
-        <label>password</label>
-        <input type="password" v-model="$v.password.$model">
-          <div v-if="!$v.password.required" class="invalid-feedback">The password field is required.</div>
-        </div>
-      </div>
-      <button>submit</button>
-    </form>
+  <div>
+
+  </div>
+
   </div>
 
 </template>
@@ -39,12 +25,16 @@
 <script>
 import Test from "@/components/test";
 import Test2 from "@/components/test2";
-import { minLength, maxLength} from 'vuelidate/lib/validators'
+import {minLength, maxLength, required, email, numeric} from 'vuelidate/lib/validators'
+
 
 
 export default {
   name: "Hello",
-  components: {Test2, Test},
+  components: {
+    Test2,
+    Test,
+  },
 
   data() {
     return {
@@ -53,23 +43,28 @@ export default {
       password: ''
     }
   },
-  validations: {
-    name: {require},
-    email: {require},
-    password: {require, minLength: minLength(6), maxLength: maxLength(18)}
+  validattion: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      numeric,
+      required,
+      maxLength: maxLength(12),
+      minLength: minLength(6)
+    },
   },
-  methods: {
-    change() {
-      this.name = " Qanh";
+  methods: {  submitForm() {
+      this.$v.$touch();
+
+      if (!this.$v.$invalid) {
+        console.log(
+            ` Email: ${this.email}, Password: ${this.password}`
+        );
+      }
     }
   },
-  submit: function() {
-
-    this.$v.$touch();
-    if (this.$v.$pendding || this.$v.$error) return;
-
-    alert('Data Submit');
-  }
 }
 </script>
 
